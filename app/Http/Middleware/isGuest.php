@@ -15,6 +15,11 @@ class isGuest
      */
     public function handle(Request $request, Closure $next): Response
     {
+
+        if(auth()->check()){
+            return redirect()->route('plans');
+        }
+
         return $next($request);
     }
 }
