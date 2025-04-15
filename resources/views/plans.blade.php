@@ -27,27 +27,27 @@
                 <div class="border border-2 rounded-3 border-secondary p-5 text-center">
                     <h3>Plano Mensal</h1>
                     <hr>
-                    <h1 class="text-center text-white">9.99$ / mês</h4>
-                    <a href="#" class="btn btn-secondary mt-3 w-100">ASSINAR</a>
+                    <h1 class="text-center text-white">R$ 9.99 / mês</h4>
+                    <a href="{{ route('plan.selected', ['id' => $prices['month']]) }}" class="btn btn-secondary mt-3 w-100">ASSINAR</a>
                 </div>
             </div>
             
             <div class="col-4 p-3">
                 <div class="border border-5 rounded-3 border-success p-5 text-center bg-black">
-                    <h3>Plano Anual</h1>
+                    <h3>Plano 1 Ano</h1>
                     <hr>
-                    <h1 class="text-center text-white">49.99$ / ano</h4>
-                    <a href="#" class="btn btn-success mt-3 w-100">ASSINAR</a>
+                    <h1 class="text-center text-white">R$ 49.99 / ano</h4>
+                    <a href="{{ route('plan.selected', ['id' => $prices['one_year']]) }}" class="btn btn-success mt-3 w-100">ASSINAR</a>
                     <p class="text-center text-warning mt-3">MAIS POPULAR</p>
                 </div>
             </div>
             
             <div class="col-4 p-3">
                 <div class="border border-2 rounded-3 border-warning p-5 text-center">
-                    <h3>Plano Trianual</h1>
+                    <h3>Plano 3 Anos</h1>
                     <hr>
-                    <h1 class="text-center text-white">199.99$</h4>
-                    <a href="#" class="btn btn-warning mt-3 w-100">ASSINAR</a>
+                    <h1 class="text-center text-white">R$ 199.99</h4>
+                    <a href="{{ route('plan.selected', ['id' => $prices['three_year']]) }}" class="btn btn-warning mt-3 w-100">ASSINAR</a>
                 </div>
             </div>
             
