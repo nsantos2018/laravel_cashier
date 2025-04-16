@@ -73,6 +73,10 @@ class MainController extends Controller
         echo "Subscrição realizada com sucesso!";
     }
 
+    public function dashboard()
+    {
+        echo "DashBoard!";
+    }
 
 
 }
