@@ -26,6 +26,15 @@
     <hr>
 
     <div class="container">
+
+        <div class="alert alert-secondary" role="alert">
+           
+        </div>
+
+        <div class="alert alert-warning" role="alert">          
+          
+        </div>
+
         <p>
             Data de expiração do seu plano é em: <strong>{{ $subscription_end }}</strong>
         </p>
