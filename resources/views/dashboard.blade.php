@@ -40,5 +40,15 @@
         </p>
     </div>
 
+    <hr>
+
+    @foreach ($invoices as $invoice)
+        
+        <div class="text-center">
+            <a href="{{ route('invoice.download', $invoice->id) }}" class="btn btn-warning">Download PDF</a>
+        </div>
+        
+    @endforeach
+
 </body>
 </html>

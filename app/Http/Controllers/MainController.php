@@ -87,13 +87,32 @@ class MainController extends Controller
 
         // get invoices
         $invoices = auth()->user()->invoices();
+        $data['invoices'] = $invoices;
 
+        /*
         if( count($invoices) > 0 ){
             $invoice = auth()->user()->invoices()->first();
             //dd($invoice);
         }
+        */
 
         return view('dashboard', $data);
+    }
+
+    public function invoiceDownload($id)
+    {
+        //return auth()->user()->downloadInvoice($id);
+
+        return auth()->user()->downloadInvoice($id,[
+            'vendor' => 'Your Company',
+            'product' => 'Your Product',
+            'street' => 'Main Str. 1',
+            'location' => '2000 Antwerp, Belgium',
+            'phone' => '+32 499 00 00 00',
+            'email' => 'info@example.com',
+            'url' => 'https://example.com',
+            'vendorVat' => 'BE123456789',
+        ]);
     }
 
 
