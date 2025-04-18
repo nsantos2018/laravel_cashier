@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Crypt;
 use Stripe\Stripe;
 use Stripe\Price;
 use Stripe\Product;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class MainController extends Controller
 {
@@ -141,6 +142,41 @@ class MainController extends Controller
             'url' => 'https://example.com',
             'vendorVat' => 'BE123456789',
         ]);
+    }
+
+    public function showInvoice($invoiceId)
+    {
+        $invoice = auth()->user()->findInvoice($invoiceId); // Cashier busca com segurança
+
+        if (!$invoice) {
+            abort(404);
+        }
+
+        $stripeInvoice = $invoice->asStripeInvoice();
+
+        return view('invoice', [
+            'invoice' => $stripeInvoice
+        ]);
+    }
+
+
+    public function downloadInvoicePdf($invoiceId)
+    {
+        $invoice = auth()->user()->findInvoice($invoiceId);
+
+        if (!$invoice) {
+            abort(404);
+        }
+
+        $stripeInvoice = $invoice->asStripeInvoice();
+
+        $pdf = Pdf::loadView('invoice_pdf', [
+            'invoice' => $stripeInvoice
+        ]);
+
+        $fileName = 'nfse-' . $invoice->number . '.pdf';
+
+        return $pdf->download($fileName);
     }
 
 

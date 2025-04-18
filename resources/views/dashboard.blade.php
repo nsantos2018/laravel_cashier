@@ -45,13 +45,37 @@
 
     <hr>
 
-    @foreach ($invoices as $invoice)
-        
-        <div class="text-center">
-            <a href="{{ route('invoice.download', $invoice->id) }}" class="btn btn-warning">Download PDF</a>
+    <div class="container">
+
+        <div class="alert alert-secondary" role="alert">
+
+            <h2 class="text-xl font-bold mb-4">Histórico de Faturas</h2>
+
+            <table class="table w-full table-auto mb-8 bg-dark w-100 p-2">
+                <thead>
+                    <tr>
+                        <th class="text-left">Número</th>
+                        <th class="text-left">Valor</th>
+                        <th class="text-left">Data</th>
+                        <th class="text-left">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($invoices as $invoice)
+                        <tr>
+                            <td>{{ $invoice->number }}</td>
+                            <td>R$ {{ number_format($invoice->amount_paid / 100, 2, ',', '.') }}</td>
+                            <td>{{ $invoice->date()->format('d/m/Y H:i') }}</td>
+                            <td>
+                                <a href="{{ route('invoice.show', $invoice->id) }}" class="text-blue-600 underline mr-2 btn btn-info btn-sm">Ver NFS-e</a>
+                                <a href="{{ route('invoice.download', $invoice->id) }}" class="text-green-600 underline btn btn-success btn-sm">Baixar PDF</a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
-        
-    @endforeach
+    </div>
 
 </body>
 </html>
