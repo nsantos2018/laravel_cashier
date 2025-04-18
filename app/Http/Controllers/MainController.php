@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Stripe\Stripe;
+use Stripe\Price;
+use Stripe\Product;
 
 class MainController extends Controller
 {
@@ -78,14 +81,39 @@ class MainController extends Controller
     {
         $data = [];
 
-        // check the expiration of subscription
-        $timestamp = auth()->user()->subscription(env('STRIPE_PRODUCT_ID'))
-            ->asStripeSubscription()
-            ->current_period_end;
+        $subscription = auth()->user()
+            ->subscription(env('STRIPE_PRODUCT_ID'))
+            ->asStripeSubscription();
 
+        // 1. Data de expiração
+        $timestamp = $subscription->current_period_end;
         $data['subscription_end'] = date('d/m/Y H:i:s', $timestamp);
 
-        // get invoices
+        // 2. Price ID do plano
+        $priceId = $subscription->items->data[0]->price->id;
+
+        // 3. Inicializa Stripe        
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        // 4. Busca os dados do Price e Product
+        $price = Price::retrieve($priceId);
+        $product = Product::retrieve($price->product);
+
+        // 5. Preenche dados
+        $data['plan_name'] = $product->name;
+        $data['plan_amount'] = number_format($price->unit_amount / 100, 2, ',', '.'); // em reais (R$)
+
+        // Identifica o tipo do plano contratado
+        $planLabel = match ($priceId) {
+            env('STRIPE_PRICE_MONTHLY')     => 'Mensal',
+            env('STRIPE_PRICE_ONE_YEAR')    => '1-Ano',
+            env('STRIPE_PRICE_THREE_YEAR')  => '3-Anos',
+            default                         => 'Desconhecido',
+        };
+
+         $data['plan_label'] = $planLabel;
+
+        // 6. Faturas
         $invoices = auth()->user()->invoices();
         $data['invoices'] = $invoices;
 

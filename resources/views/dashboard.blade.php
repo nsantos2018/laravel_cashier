@@ -28,12 +28,15 @@
     <div class="container">
 
         <div class="alert alert-secondary" role="alert">
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Plano contratado: {{ $plan_name }} ({{ $plan_label }})</li>
+                <li class="list-group-item">Valor do Plano: R$ {{ $plan_amount }}</li>
+                <li class="list-group-item">Data de Expiração: {{ $subscription_end }}</li>                
+            </ul>
            
         </div>
-
-        <div class="alert alert-warning" role="alert">          
-          
-        </div>
+        
 
         <p>
             Data de expiração do seu plano é em: <strong>{{ $subscription_end }}</strong>
