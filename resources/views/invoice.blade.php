@@ -1,3 +1,7 @@
+@php
+    use App\Helpers\StripeHelper;
+@endphp
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -39,7 +43,7 @@
         
             <div class="mb-4">
                 <strong>Cliente:</strong> {{ $invoice->customer_email ?? auth()->user()->email }}<br>
-                <strong>Valor:</strong> R$ {{ number_format($invoice->amount_paid / 100, 2, ',', '.') }}
+                <strong>Valor:</strong> {{ StripeHelper::formatCurrency($invoice->amount_paid) }}
             </div>
         
             <hr class="my-4">
@@ -51,14 +55,9 @@
                     @php
                         $priceId = $item->price->id ?? null;
             
-                        $planLabel = match ($priceId) {
-                            env('STRIPE_PRICE_MONTHLY')     => 'Mensal',
-                            env('STRIPE_PRICE_ONE_YEAR')    => '1-Ano',
-                            env('STRIPE_PRICE_THREE_YEAR')  => '3-Anos',
-                            default                         => 'Plano Desconhecido',
-                        };
+                        $planLabel = StripeHelper::getPlanLabel($item->price->id);
             
-                        $amount = number_format($item->amount / 100, 2, ',', '.');
+                        $amount = StripeHelper::formatCurrency($item->amount);
                     @endphp
             
                     <li>{{ $item->quantity }} × {{ $item->description }} - {{ $planLabel }} - R$ {{ $amount }}</li>
@@ -66,7 +65,7 @@
             </ul>
         
             <div class="mt-6">
-                <a href="{{ $invoice->hosted_invoice_url }}" target="_blank" class="text-blue-600 underline">
+                <a href="{{ $invoice->hosted_invoice_url }}" target="_blank" class="text-blue-600 underline btn btn-success btn-sm">
                     Ver versão oficial da Stripe
                 </a>
             </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\StripeHelper;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
@@ -88,7 +89,8 @@ class MainController extends Controller
 
         // 1. Data de expiração
         $timestamp = $subscription->current_period_end;
-        $data['subscription_end'] = date('d/m/Y H:i:s', $timestamp);
+        //$data['subscription_end'] = date('d/m/Y H:i:s', $timestamp);
+        $data['subscription_end'] = StripeHelper::formatDate($timestamp);
 
         // 2. Price ID do plano
         $priceId = $subscription->items->data[0]->price->id;
@@ -102,17 +104,13 @@ class MainController extends Controller
 
         // 5. Preenche dados
         $data['plan_name'] = $product->name;
-        $data['plan_amount'] = number_format($price->unit_amount / 100, 2, ',', '.'); // em reais (R$)
+        //$data['plan_amount'] = number_format($price->unit_amount / 100, 2, ',', '.'); // em reais (R$)
+        $data['plan_amount'] = StripeHelper::formatCurrency($price->unit_amount);
 
         // Identifica o tipo do plano contratado
-        $planLabel = match ($priceId) {
-            env('STRIPE_PRICE_MONTHLY')     => 'Mensal',
-            env('STRIPE_PRICE_ONE_YEAR')    => '1-Ano',
-            env('STRIPE_PRICE_THREE_YEAR')  => '3-Anos',
-            default                         => 'Desconhecido',
-        };
+        $planLabel = StripeHelper::getPlanLabel($priceId);
 
-         $data['plan_label'] = $planLabel;
+        $data['plan_label'] = $planLabel;
 
         // 6. Faturas
         $invoices = auth()->user()->invoices();

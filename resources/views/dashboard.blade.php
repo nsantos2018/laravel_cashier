@@ -1,3 +1,6 @@
+@php
+    use App\Helpers\StripeHelper;
+@endphp
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -31,16 +34,12 @@
 
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Plano contratado: {{ $plan_name }} ({{ $plan_label }})</li>
-                <li class="list-group-item">Valor do Plano: R$ {{ $plan_amount }}</li>
+                <li class="list-group-item">Valor do Plano: {{ $plan_amount }}</li>
                 <li class="list-group-item">Data de Expiração: {{ $subscription_end }}</li>                
             </ul>
            
-        </div>
-        
+        </div>        
 
-        <p>
-            Data de expiração do seu plano é em: <strong>{{ $subscription_end }}</strong>
-        </p>
     </div>
 
     <hr>
@@ -64,7 +63,7 @@
                     @foreach ($invoices as $invoice)
                         <tr>
                             <td>{{ $invoice->number }}</td>
-                            <td>R$ {{ number_format($invoice->amount_paid / 100, 2, ',', '.') }}</td>
+                            <td>{{ StripeHelper::formatCurrency($invoice->amount_paid) }}</td>
                             <td>{{ $invoice->date()->format('d/m/Y H:i') }}</td>
                             <td>
                                 <a href="{{ route('invoice.show', $invoice->id) }}" class="text-blue-600 underline mr-2 btn btn-info btn-sm">Ver NFS-e</a>
